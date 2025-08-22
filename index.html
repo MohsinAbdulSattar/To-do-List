@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-do List</title>
+    <link rel="stylesheet" href="customization.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+    <!-- cdn for bootstrap! -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+    <style>
+        body {
+            background-color: rgb(125, 186, 173);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-bg-dark my-4">
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item"> <a href="#" class="nav-link active" aria-current="page">
+                    <i class="bi bi-house-door-fill me-2"></i>
+                    Home
+                </a> </li>
+            <li> <a href="#" class="nav-link text-white">
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Important Tasks
+                </a> </li>
+            <li> <a href="#" class="nav-link text-white">
+                    <i class="bi bi-table me-2"></i>
+
+                    Planned
+                </a> </li>
+            <li> <a href="#" class="nav-link text-white">
+                    <i class="bi bi-grid-fill me-2"></i>
+
+                    Tasks
+                </a> </li>
+
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <!-- <a href="#"
+                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                data-bs-toggle="dropdown" aria-expanded="false"> <img src="https://github.com/mdo.png" alt="" width="32"
+                    height="32" class="rounded-circle me-2"> <strong>Logout</strong> </a> -->
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                <li><a class="dropdown-item" href="#">New project...</a></li>
+                <li><a class="dropdown-item" href="#">Settings</a></li>
+                <li><a class="dropdown-item" href="#">Profile</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Sign out</a></li>
+            </ul>
+        </div>
+    </div>
+
+
+
+    <!-- NAVBAR -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid "> <a class="navbar-brand mx-4 " href="#"><strong>To-Do list</strong></a>
+
+            </div>
+
+
+        </nav>
+
+        <div class="container mx-auto my-5 ">
+            <h1>What's on your mind?</h1>
+            <div id="alertbtn">
+                <div class="alert alert-success d-flex align-items-center " role="alert">
+                    <i class="bi bi-check me-4"></i>
+                    <div>
+                        Successfully added a task
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container my-6">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4 p-4 custom-bg rounded shadow"> <!-- smaller box on medium+ screens -->
+
+                    <div class="mb-3">
+                        <label for="taskInput" class="form-label">Task:</label>
+                        <input type="text" class="form-control" id="taskInput"
+                            placeholder="e.g. Pick up 4kg of tomatoes">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descInput" class="form-label">Description:</label>
+                        <textarea class="form-control" id="descInput" rows="3"
+                            placeholder="e.g. From the farmer's market before 6 PM"></textarea>
+                    </div>
+
+
+                    <div class="text-center">
+                        <button id="taskbtn" class="btn btn-dark mt-3">Add Task
+                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
+                                class="bi bi-file-plus-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0" />
+                            </svg>
+                        </button>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <div class="container mt-4">
+                <h3>Your Tasks:</h3>
+                <ul id="taskList" class="list-group">
+                    <!-- Tasks will be added here -->
+                </ul>
+            </div>
+            
+
+        </div>
+    </div>
+</body>
+
+<script>
+  
+
+    let tasks = []; // Store tasks to be added to Excel
+
+    $(document).ready(function () {
+        // Disable Add button initially
+        $('#taskbtn').prop('disabled', true);
+
+        // Enable it only when input has text
+        $('#taskInput, #descInput').on('input', function () {
+            const task = $('#taskInput').val().trim();
+            const desc = $('#descInput').val().trim();
+
+            if (task.length > 0 && desc.length > 0) {
+                $('#taskbtn').prop('disabled', false);
+            } else {
+                $('#taskbtn').prop('disabled', true);
+            }
+        });
+
+
+        // THIS IS my style of alert button + TASK LOGIC
+        $('#taskbtn').click(function () {
+            
+            const taskValue = $('#taskInput').val().trim();
+            const descValue = $('#descInput').val().trim();
+            
+            if (!taskValue || !descValue) {
+                // alert("Please enter both a task and a description.");
+                return;
+            }
+            // ✅ Add task to the visible list
+            const taskHTML = `
+    <li class="list-group-item CustomColor">
+        <div class="d-flex justify-content-between align-items-start">
+        <div>
+            <strong>${taskValue}</strong><br>
+            <small>${descValue}</small>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-primary  me-2"><i class="bi bi-pencil"></i></button>
+            <button class="btn btn-sm btn-danger "><i class="bi bi-trash3"></i></button>
+        </div>
+    </div>
+       
+    </li>
+`;
+            $('#taskList').append(taskHTML);
+            
+            // ✅ Show your animated alert
+            $('#alertbtn').fadeIn(1600);
+            console.log("you clicked on me");
+            $('#alertbtn').fadeOut(2000);
+
+            // ✅ Add task to array
+            tasks.push({ Task: taskValue, Description: descValue });
+
+
+            // ✅ Convert to worksheet & export to Excel
+            const ws = XLSX.utils.json_to_sheet(tasks);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Tasks');
+            XLSX.writeFile(wb, 'tasks.xlsx');
+            
+            // ✅ Clear input & disable button again
+            $('#taskInput').val('');
+            $('#descInput').val('');
+            $('#taskbtn').prop('disabled', true);
+
+        });
+    });
+
+
+
+
+
+</script>
+
+</html>
