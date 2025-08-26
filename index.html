@@ -118,8 +118,50 @@
                         </button>
                     </div>
 
-                </div>
 
+                </div>
+                <!-- TASK TABS -->
+                <div id="tabb" class="container my-4">
+                    <!-- Navigation Tabs -->
+                    <ul class="nav nav-tabs justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="todo-tab" data-bs-toggle="tab" href="#todo">TO-DO</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="progress-tab" data-bs-toggle="tab" href="#progress">IN-PROGRESS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="done-tab" data-bs-toggle="tab" href="#done">DONE</a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content mt-3">
+                        <!-- TO-DO -->
+                        <div class="tab-pane fade show active" id="todo">
+                            <h4>To-Do Tasks</h4>
+                            <ul id="todoList" class="list-group">
+                                <!-- To-do tasks go here -->
+                            </ul>
+                        </div>
+
+                        <!-- IN-PROGRESS -->
+                        <div class="tab-pane fade" id="progress">
+                            <h4>In-Progress Tasks</h4>
+                            <ul id="progressList" class="list-group">
+                                <!-- In-progress tasks go here -->
+                            </ul>
+                        </div>
+
+                        <!-- DONE -->
+                        <div class="tab-pane fade" id="done">
+                            <h4>Completed Tasks</h4>
+                            <ul id="doneList" class="list-group">
+                                <!-- Completed tasks go here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
@@ -129,89 +171,135 @@
                     <!-- Tasks will be added here -->
                 </ul>
             </div>
-            
+            <div class="container mt-4">
+                <h3>Completed tasks:</h3>
+                <ul id="completedTaskList" class="list-group">
+                    <!-- Completed Tasks will be added here -->
+                </ul>
+            </div>
+            <div class="container mt-4 text-center">
+                <button id="downloadExcel" class="btn btn-success">
+                    <i class="bi bi-download"></i> Download Tasks (Excel)
+                </button>
+            </div>
+
 
         </div>
     </div>
 </body>
 
 <script>
-  
-
-    let tasks = []; // Store tasks to be added to Excel
-
     $(document).ready(function () {
-        // Disable Add button initially
-        $('#taskbtn').prop('disabled', true);
+    let tasks = [];
 
-        // Enable it only when input has text
-        $('#taskInput, #descInput').on('input', function () {
-            const task = $('#taskInput').val().trim();
-            const desc = $('#descInput').val().trim();
-
-            if (task.length > 0 && desc.length > 0) {
-                $('#taskbtn').prop('disabled', false);
-            } else {
-                $('#taskbtn').prop('disabled', true);
-            }
-        });
-
-
-        // THIS IS my style of alert button + TASK LOGIC
-        $('#taskbtn').click(function () {
-            
-            const taskValue = $('#taskInput').val().trim();
-            const descValue = $('#descInput').val().trim();
-            
-            if (!taskValue || !descValue) {
-                // alert("Please enter both a task and a description.");
-                return;
-            }
-            // ✅ Add task to the visible list
-            const taskHTML = `
-    <li class="list-group-item CustomColor">
-        <div class="d-flex justify-content-between align-items-start">
-        <div>
-            <strong>${taskValue}</strong><br>
-            <small>${descValue}</small>
-        </div>
-        <div>
-            <button class="btn btn-sm btn-primary  me-2"><i class="bi bi-pencil"></i></button>
-            <button class="btn btn-sm btn-danger "><i class="bi bi-trash3"></i></button>
-        </div>
-    </div>
-       
-    </li>
-`;
-            $('#taskList').append(taskHTML);
-            
-            // ✅ Show your animated alert
-            $('#alertbtn').fadeIn(1600);
-            console.log("you clicked on me");
-            $('#alertbtn').fadeOut(2000);
-
-            // ✅ Add task to array
-            tasks.push({ Task: taskValue, Description: descValue });
-
-
-            // ✅ Convert to worksheet & export to Excel
-            const ws = XLSX.utils.json_to_sheet(tasks);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Tasks');
-            XLSX.writeFile(wb, 'tasks.xlsx');
-            
-            // ✅ Clear input & disable button again
-            $('#taskInput').val('');
-            $('#descInput').val('');
-            $('#taskbtn').prop('disabled', true);
-
-        });
+    // Enable/disable Add Task button
+    $('#taskInput, #descInput').on('input', function () {
+        const task = $('#taskInput').val().trim();
+        const desc = $('#descInput').val().trim();
+        $('#taskbtn').prop('disabled', !(task && desc));
     });
 
+    // Add Task
+    $('#taskbtn').click(function () {
+        const taskValue = $('#taskInput').val().trim();
+        const descValue = $('#descInput').val().trim();
 
+        if (!taskValue || !descValue) return;
 
+        const taskHTML = `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${taskValue}</strong><br>
+                    <small>${descValue}</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
+                    <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+                </div>
+            </li>
+        `;
+        $('#todoList').append(taskHTML);
 
+        tasks.push({ Task: taskValue, Description: descValue, Status: "To-Do" });
+
+        $('#taskInput').val('');
+        $('#descInput').val('');
+        $('#taskbtn').prop('disabled', true);
+    });
+
+    // DELETE button
+    $(document).on('click', '.delete-btn', function () {
+        $(this).closest('li').remove();
+    });
+
+    // START button (To-Do → In Progress)
+    $(document).on('click', '.start-btn', function () {
+        const listItem = $(this).closest('li');
+        const taskValue = listItem.find('strong').text();
+        const descValue = listItem.find('small').text();
+
+        const progressHTML = `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${taskValue}</strong><br>
+                    <small>${descValue}</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-success complete-btn me-2"><i class="bi bi-check2"></i></button>
+                    <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+                </div>
+            </li>
+        `;
+        $('#progressList').append(progressHTML);
+        listItem.remove();
+    });
+
+    // COMPLETE button (In Progress → Done)
+    $(document).on('click', '.complete-btn', function () {
+        const listItem = $(this).closest('li');
+        const taskValue = listItem.find('strong').text();
+        const descValue = listItem.find('small').text();
+
+        const doneHTML = `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${taskValue}</strong><br>
+                    <small>${descValue}</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-warning redo-btn me-2"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+                </div>
+            </li>
+        `;
+        $('#doneList').append(doneHTML);
+        listItem.remove();
+    });
+
+    // REDO button (Done → To-Do)
+    $(document).on('click', '.redo-btn', function () {
+        const listItem = $(this).closest('li');
+        const taskValue = listItem.find('strong').text();
+        const descValue = listItem.find('small').text();
+
+        const todoHTML = `
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${taskValue}</strong><br>
+                    <small>${descValue}</small>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
+                    <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+                </div>
+            </li>
+        `;
+        $('#todoList').append(todoHTML);
+        listItem.remove();
+    });
+});
 
 </script>
+
 
 </html>
