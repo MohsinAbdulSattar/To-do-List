@@ -9,15 +9,9 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-
-    <!-- cdn for bootstrap! -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-
-    <!-- Bootstrap Icons -->
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
-
 
     <style>
         body {
@@ -27,74 +21,40 @@
 </head>
 
 <body>
+    <!-- Sidebar -->
     <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-bg-dark my-4">
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
-            <li class="nav-item"> <a href="#" class="nav-link active" aria-current="page">
-                    <i class="bi bi-house-door-fill me-2"></i>
-                    Home
-                </a> </li>
-            <li> <a href="#" class="nav-link text-white">
-                    <i class="bi bi-speedometer2 me-2"></i>
-                    Important Tasks
-                </a> </li>
-            <!-- <li> <a href="#" class="nav-link text-white">
-                    <i class="bi bi-table me-2"></i>
-
-                    Planned
-                </a> </li>
-            <li> <a href="#" class="nav-link text-white">
-                    <i class="bi bi-grid-fill me-2"></i>
-
-                    Tasks
-                </a> </li> -->
-
+            <li class="nav-item">
+                <a href="#" id="homeLink" class="nav-link active" aria-current="page">
+                    <i class="bi bi-house-door-fill me-2"></i> Home
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" id="importantLink" class="nav-link text-white">
+                    <i class="bi bi-speedometer2 me-2"></i> Important Tasks
+                </a>
+            </li>
         </ul>
         <hr>
-        <div class="dropdown">
-            <!-- <a href="#"
-                class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                data-bs-toggle="dropdown" aria-expanded="false"> <img src="https://github.com/mdo.png" alt="" width="32"
-                    height="32" class="rounded-circle me-2"> <strong>Logout</strong> </a> -->
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                <li><a class="dropdown-item" href="#">New project...</a></li>
-                <li><a class="dropdown-item" href="#">Settings</a></li>
-                <li><a class="dropdown-item" href="#">Profile</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Sign out</a></li>
-            </ul>
-        </div>
     </div>
 
-
-
-    <!-- NAVBAR -->
+    <!-- Main Content -->
     <div class="main-content">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container-fluid "> <a class="navbar-brand mx-4 " href="#"><strong>To-Do list</strong></a>
-
+            <div class="container-fluid ">
+                <a class="navbar-brand mx-4" href="#"><strong>To-Do list</strong></a>
             </div>
-
-
         </nav>
 
-        <div class="container mx-auto my-5 ">
+        <div id="heading" class="container mx-auto my-5">
             <h1>What's on your mind?</h1>
-            <div id="alertbtn">
-                <div class="alert alert-success d-flex align-items-center " role="alert">
-                    <i class="bi bi-check me-4"></i>
-                    <div>
-                        Successfully added a task
-                    </div>
-                </div>
-            </div>
         </div>
+
         <div class="container my-6">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4 p-4 custom-bg rounded shadow"> <!-- smaller box on medium+ screens -->
-
+                <div class="col-md-6 col-lg-4 p-4 custom-bg rounded shadow">
+                    <!-- Task input -->
                     <div class="mb-3">
                         <label for="taskInput" class="form-label">Task:</label>
                         <input type="text" class="form-control" id="taskInput"
@@ -107,265 +67,308 @@
                             placeholder="e.g. From the farmer's market before 6 PM"></textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="priorityInput" class="form-label">Priority:</label>
+                        <select class="form-select" id="priorityInput">
+                            <option value="High">High 🔴</option>
+                            <option value="Medium" selected>Medium 🟡</option>
+                            <option value="Low">Low 🟢</option>
+                        </select>
+                    </div>
 
                     <div class="text-center">
                         <button id="taskbtn" class="btn btn-dark mt-3">Add Task
-                            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-                                class="bi bi-file-plus-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="M12 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2M8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0" />
-                            </svg>
+                            <i class="bi bi-file-plus-fill"></i>
                         </button>
                     </div>
-
-
                 </div>
+
                 <!-- Search Bar -->
-                <div class="container my-3 ">
+                <div class="container my-3">
                     <div class="row justify-content-center">
-                        <div class="col-md-6 col-lg-4 ">
-                            <input type="text" id="searchInput" class="form-control form-control-md text-center  "
+                        <div class="col-md-6 col-lg-4">
+                            <input type="text" id="searchInput" class="form-control form-control-md text-center"
                                 placeholder="Search tasks...">
+                            <button id="searchBtn" class="btn btn-primary mt-2 w-100">Search</button>
                         </div>
                     </div>
                 </div>
 
-
-
-                <!-- TASK TABS -->
+                <!-- Task Tabs -->
                 <div id="tabb" class="container my-4">
-                    <!-- Navigation Tabs -->
-                    <ul class="nav nav-tabs justify-content-center ">
-                        <li class="nav-item ">
-                            <a class="nav-link active " id="todo-tab" data-bs-toggle="tab" href="#todo">TO-DO</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="progress-tab" data-bs-toggle="tab" href="#progress">IN-PROGRESS</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="done-tab" data-bs-toggle="tab" href="#done">DONE</a>
-                        </li>
+                    <ul class="nav nav-tabs justify-content-center">
+                        <li class="nav-item"><a class="nav-link active" id="todo-tab" data-bs-toggle="tab"
+                                href="#todo">TO-DO</a></li>
+                        <li class="nav-item"><a class="nav-link" id="progress-tab" data-bs-toggle="tab"
+                                href="#progress">IN-PROGRESS</a></li>
+                        <li class="nav-item"><a class="nav-link" id="done-tab" data-bs-toggle="tab"
+                                href="#done">DONE</a></li>
                     </ul>
 
-                    <!-- Tab Content -->
                     <div class="tab-content mt-3">
-                        <!-- TO-DO -->
                         <div class="tab-pane fade show active" id="todo">
                             <h4>To-Do Tasks</h4>
-                            <ul id="todoList" class="list-group">
-                                <!-- To-do tasks go here -->
-                            </ul>
+                            <ul id="todoList" class="list-group"></ul>
                         </div>
-
-                        <!-- IN-PROGRESS -->
                         <div class="tab-pane fade" id="progress">
                             <h4>In-Progress Tasks</h4>
-                            <ul id="progressList" class="list-group">
-                                <!-- In-progress tasks go here -->
-                            </ul>
+                            <ul id="progressList" class="list-group"></ul>
                         </div>
-
-                        <!-- DONE -->
                         <div class="tab-pane fade" id="done">
                             <h4>Completed Tasks</h4>
-                            <ul id="doneList" class="list-group">
-                                <!-- Completed tasks go here -->
-                            </ul>
+                            <ul id="doneList" class="list-group"></ul>
                         </div>
                     </div>
                 </div>
 
+                <!-- Important Tasks Section -->
+                <div id="importantTasks" class="container my-4" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="m-0">Important Tasks (sorted by priority)</h4>
+                        <button id="backToBoard" class="btn btn-sm btn-secondary">Back to Board</button>
+                    </div>
+                    <ul id="importantList" class="list-group"></ul>
+                </div>
 
-
+                <!-- Download -->
                 <div class="container mt-4 text-center">
                     <button id="downloadExcel" class="btn btn-success">
                         <i class="bi bi-download"></i> Download Tasks (Excel)
                     </button>
                 </div>
-
-
             </div>
         </div>
-</body>
-<!-- so that the tab -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
 
-<script>
-    $(document).ready(function () {
-        let tasks = [];
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-        // Enable/disable Add Task button
-        $('#taskInput, #descInput').on('input', function () {
-            const task = $('#taskInput').val().trim();
-            const desc = $('#descInput').val().trim();
-            $('#taskbtn').prop('disabled', !(task && desc));
-        });
+    <script>
+        $(document).ready(function () {
+            let tasks = [];
+            const priorityOrder = { High: 1, Medium: 2, Low: 3 };
 
-        // Add Task
-        $('#taskbtn').click(function () {
-            const taskValue = $('#taskInput').val().trim();
-            const descValue = $('#descInput').val().trim();
-
-            if (!taskValue || !descValue) return;
-
-            const taskHTML = `
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>${taskValue}</strong><br>
-                        <small>${descValue}</small>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
-                        <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
-                    </div>
-                </li>
-            `;
-            $('#todoList').append(taskHTML);
-
-            tasks.push({ Task: taskValue, Description: descValue, Status: "To-Do" });
-
-            $('#taskInput').val('');
-            $('#descInput').val('');
-            $('#taskbtn').prop('disabled', true);
-        });
-
-        // DELETE button
-        $(document).on('click', '.delete-btn', function () {
-            const listItem = $(this).closest('li');
-            const taskValue = listItem.find('strong').text();
-
-            // Remove from array
-            tasks = tasks.filter(t => t.Task !== taskValue);
-
-            listItem.remove();
-        });
-
-        // START button (To-Do → In Progress)
-        $(document).on('click', '.start-btn', function () {
-            const listItem = $(this).closest('li');
-            const taskValue = listItem.find('strong').text();
-            const descValue = listItem.find('small').text();
-
-            tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "In Progress" } : t);
-
-            const progressHTML = `
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>${taskValue}</strong><br>
-                        <small>${descValue}</small>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-success complete-btn me-2"><i class="bi bi-check2"></i></button>
-                        <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
-                    </div>
-                </li>
-            `;
-            $('#progressList').append(progressHTML);
-            listItem.remove();
-
-            // Switch to progress tab automatically
-            $('#progress-tab').tab('show');
-        });
-
-        // COMPLETE button (In Progress → Done)
-        $(document).on('click', '.complete-btn', function () {
-            const listItem = $(this).closest('li');
-            const taskValue = listItem.find('strong').text();
-            const descValue = listItem.find('small').text();
-
-            tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "Done" } : t);
-
-            const doneHTML = `
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>${taskValue}</strong><br>
-                        <small>${descValue}</small>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-warning redo-btn me-2"><i class="bi bi-arrow-counterclockwise"></i></button>
-                        <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
-                    </div>
-                </li>
-            `;
-            $('#doneList').append(doneHTML);
-            listItem.remove();
-
-            // Switch to done tab automatically
-            $('#done-tab').tab('show');
-        });
-
-        // REDO button (Done → To-Do)
-        $(document).on('click', '.redo-btn', function () {
-            const listItem = $(this).closest('li');
-            const taskValue = listItem.find('strong').text();
-            const descValue = listItem.find('small').text();
-
-            tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "To-Do" } : t);
-
-            const todoHTML = `
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>${taskValue}</strong><br>
-                        <small>${descValue}</small>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
-                        <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
-                    </div>
-                </li>
-            `;
-            $('#todoList').append(todoHTML);
-            listItem.remove();
-
-            // Switch to todo tab automatically
-            $('#todo-tab').tab('show');
-        });
-
-        // DOWNLOAD EXCEL button
-        $('#downloadExcel').click(function () {
-            if (tasks.length === 0) {
-                alert("No tasks available to download!");
-                return;
+            // Escape HTML
+            function escapeHtml(str) {
+                if (!str) return '';
+                return String(str)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
             }
 
-            const worksheet = XLSX.utils.json_to_sheet(tasks);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
+            // Export to Excel
+            function exportToExcel() {
+                if (tasks.length === 0) {
+                    alert("No tasks to export.");
+                    return;
+                }
+                const worksheet = XLSX.utils.json_to_sheet(tasks);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
+                XLSX.writeFile(workbook, "tasks.xlsx");
+            }
 
-            XLSX.writeFile(workbook, "tasks.xlsx");
-        });
+            // Render Important Tasks (only High & Medium)
+            function renderImportant() {
+                const $list = $('#importantList');
+                $list.empty();
+                const filtered = tasks.filter(t => t.Priority === "High" || t.Priority === "Medium");
+                const sorted = filtered.sort((a, b) => (priorityOrder[a.Priority] || 4) - (priorityOrder[b.Priority] || 4));
+                if (sorted.length === 0) {
+                    $list.append('<li class="list-group-item">No important tasks available</li>');
+                    return;
+                }
+                sorted.forEach(t => {
+                    const badgeClass = t.Priority === 'High' ? 'bg-danger' : 'bg-warning text-dark';
+                    const item = `
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+            <div>
+              <strong>${escapeHtml(t.Task)}</strong>
+              <span class="badge ${badgeClass} ms-2">${escapeHtml(t.Priority)}</span><br>
+              <small>${escapeHtml(t.Description)}</small>
+            </div>
+          </li>`;
+                    $list.append(item);
+                });
+            }
 
-        // LIVE SEARCH (only active tab)
-        $('#searchInput').on('keyup', function () {
-            const value = $(this).val().toLowerCase();
+            // Sidebar: show Important
+            $('#importantLink').click(function (e) {
+                e.preventDefault();
+                
+                // Hide everything else
+                $('#tabb').hide();             // Hide task tabs
+                $('.custom-bg').hide();        // Hide input form
+                $('#searchInput').closest('.container').hide(); // Hide search bar
+                $('#downloadExcel').hide();    // Hide Excel button
+                // $('#heading').hide();    // Hide heading button
 
-            // Get currently active tab's task list
-            const activeTab = $('.tab-pane.active ul.list-group');
 
-            let visibleCount = 0;
+                // Show important
+                $('#importantTasks').show();
 
-            activeTab.find('li').filter(function () {
-                const match = $(this).text().toLowerCase().indexOf(value) > -1;
-                $(this).toggle(match);
-                if (match) visibleCount++;
+                renderImportant();
+
+                // highlight sidebar
+                $('#importantLink').addClass('active');
+                $('#homeLink').removeClass('active');
             });
 
-            // Optional: show "No tasks found"
-            if (visibleCount === 0 && value.length > 0) {
-                if ($('#noResults').length === 0) {
-                    activeTab.after('<p id="noResults" class="text-center mt-2 text-danger">No tasks found</p>');
+            // Sidebar: back to Board/Home
+            $('#backToBoard, #homeLink').click(function (e) {
+                e.preventDefault();
+
+                // Show everything again
+                $('#tabb').show();
+                $('.custom-bg').show();
+                $('#searchInput').closest('.container').show();
+                $('#downloadExcel').show();
+
+                $('#importantTasks').hide();
+
+                $('#homeLink').addClass('active');
+                $('#importantLink').removeClass('active');
+            });
+
+            // Add Task
+            $('#taskbtn').click(function () {
+                const taskValue = $('#taskInput').val().trim();
+                const descValue = $('#descInput').val().trim();
+                const priorityValue = $('#priorityInput').val();
+                if (taskValue === "") {
+                    alert("Please enter a task!");
+                    return;
                 }
-                $('#noResults').show();
-            } else {
-                $('#noResults').hide();
-            }
+                tasks.push({ Task: taskValue, Description: descValue, Priority: priorityValue, Status: "To-Do" });
+                renderImportant();
+                const badgeClass = priorityValue === "High" ? "bg-danger" :
+                    priorityValue === "Medium" ? "bg-warning text-dark" : "bg-success";
+                const todoHTML = `
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${escapeHtml(taskValue)}</strong>
+            <span class="badge ${badgeClass} ms-2">${priorityValue}</span><br>
+            <small>${escapeHtml(descValue)}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
+            <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+          </div>
+        </li>`;
+                $('#todoList').append(todoHTML);
+                $('#taskInput').val('');
+                $('#descInput').val('');
+                $('#priorityInput').val('Medium');
+            });
+
+            // Delete Task
+            $(document).on('click', '.delete-btn', function () {
+                const listItem = $(this).closest('li');
+                const taskValue = listItem.find('strong').text();
+                tasks = tasks.filter(t => t.Task !== taskValue);
+                listItem.remove();
+                renderImportant();
+            });
+
+            // Start Task
+            $(document).on('click', '.start-btn', function () {
+                const listItem = $(this).closest('li');
+                const taskValue = listItem.find('strong').text();
+                const descValue = listItem.find('small').text();
+                const priorityValue = listItem.find('.badge').text();
+                tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "In Progress" } : t);
+                renderImportant();
+                const badgeClass = priorityValue === "High" ? "bg-danger" :
+                    priorityValue === "Medium" ? "bg-warning text-dark" : "bg-success";
+                $('#progressList').append(`
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${escapeHtml(taskValue)}</strong>
+            <span class="badge ${badgeClass} ms-2">${priorityValue}</span><br>
+            <small>${escapeHtml(descValue)}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-success complete-btn me-2"><i class="bi bi-check2"></i></button>
+            <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+          </div>
+        </li>`);
+                listItem.remove();
+            });
+
+            // Complete Task
+            $(document).on('click', '.complete-btn', function () {
+                const listItem = $(this).closest('li');
+                const taskValue = listItem.find('strong').text();
+                const descValue = listItem.find('small').text();
+                const priorityValue = listItem.find('.badge').text();
+                tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "Done" } : t);
+                renderImportant();
+                const badgeClass = priorityValue === "High" ? "bg-danger" :
+                    priorityValue === "Medium" ? "bg-warning text-dark" : "bg-success";
+                $('#doneList').append(`
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${escapeHtml(taskValue)}</strong>
+            <span class="badge ${badgeClass} ms-2">${priorityValue}</span><br>
+            <small>${escapeHtml(descValue)}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-warning redo-btn me-2"><i class="bi bi-arrow-counterclockwise"></i></button>
+            <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+          </div>
+        </li>`);
+                listItem.remove();
+            });
+
+            // Redo Task
+            $(document).on('click', '.redo-btn', function () {
+                const listItem = $(this).closest('li');
+                const taskValue = listItem.find('strong').text();
+                const descValue = listItem.find('small').text();
+                const priorityValue = listItem.find('.badge').text();
+                tasks = tasks.map(t => t.Task === taskValue ? { ...t, Status: "To-Do" } : t);
+                renderImportant();
+                const badgeClass = priorityValue === "High" ? "bg-danger" :
+                    priorityValue === "Medium" ? "bg-warning text-dark" : "bg-success";
+                $('#todoList').append(`
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div>
+            <strong>${escapeHtml(taskValue)}</strong>
+            <span class="badge ${badgeClass} ms-2">${priorityValue}</span><br>
+            <small>${escapeHtml(descValue)}</small>
+          </div>
+          <div>
+            <button class="btn btn-sm btn-primary start-btn me-2"><i class="bi bi-play-fill"></i></button>
+            <button class="btn btn-sm btn-dark delete-btn"><i class="bi bi-trash3"></i></button>
+          </div>
+        </li>`);
+                listItem.remove();
+            });
+
+            // Live Search with highlight
+            $('#searchInput').on('input', function () {
+                const searchTerm = $(this).val().toLowerCase();
+                $('li.list-group-item').each(function () {
+                    const taskText = $(this).text().toLowerCase();
+                    if (searchTerm !== "" && taskText.includes(searchTerm)) {
+                        $(this).css("background-color", "yellow");
+                    } else {
+                        $(this).css("background-color", "");
+                    }
+                });
+            });
+
+            // Excel download
+            $('#downloadExcel').click(function () {
+                exportToExcel();
+            });
         });
+    </script>
 
 
-    });
-</script>
-
-
-
+</body>
 
 </html>
